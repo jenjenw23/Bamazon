@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "----",
+  password: "------",
   database: "bamazon_DB"
 });
 
@@ -29,7 +29,6 @@ function showProducts() {
     // for (var i = 0; i < res.length; i++) {
     //   console.log(res[i].Item_Id + " | " + res[i].Product_Name + " | " + res[i].Department_Name + " | " + res[i].Price + " | " + res[i].Stock_Quantity);
     // }
-    // console.log("-----------------------------------");
     //shows cleaner list of items
     console.table(res);
     startShopping();
@@ -61,14 +60,27 @@ function showProducts() {
           }
         }
       ])
-        .then(function (answers) {
-      var query = 'SELECT Stock_Quantity, Price, Product_Name FROM products WHERE ?';
-      connection.query(query, { Item_ID: answers.whatID },
-        function (err, res) {
-          console.log(answers.howManyUnits);
-          console.log(res);
-          
-        });
-    });
+      .then(function (answers) {
+        var query = 'SELECT Stock_Quantity, Price, Product_Name FROM products WHERE ?';
+        connection.query(query, { Item_ID: answers.whatID },
+          function (err, res) {
+            //console.log(answers.howManyUnits);
+            //console.log(res);
+
+            if (answers.howManyUnits > res[0].Stock_Quantity) {
+              console.log("\r\n*********************************");
+              console.log("Insufficient Quantity Available!");
+              console.log("*********************************");
+              startShopping();
+            }
+            else {
+              console.log("\r\n*********************************");
+              console.log("it's yours");
+              console.log("*********************************");
+              startShopping();
+            }
+
+          });
+      });
   }
 }
