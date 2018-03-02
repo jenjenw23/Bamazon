@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "------",
+  password: "---",
   database: "bamazon_DB"
 });
 
@@ -40,7 +40,7 @@ function showProducts() {
         {
           name: "whatID",
           type: "input",
-          message: "What is the ID of the product they would like to buy? ",
+          message: "What is the ID of the product you would like to buy? ",
           validate: function (value) {
             if (isNaN(value) === false) {
               return true;
@@ -51,7 +51,7 @@ function showProducts() {
         {
           name: "howManyUnits",
           type: "input",
-          message: "How many units of the product they would like to buy? ",
+          message: "How many units of the product would you like to buy? ",
           validate: function (value) {
             if (isNaN(value) === false) {
               return true;
@@ -74,9 +74,13 @@ function showProducts() {
               startShopping();
             }
             else {
-              console.log("\r\n*********************************");
-              console.log("it's yours");
-              console.log("*********************************");
+              console.log("Ordered Summary:");
+              console.log("Total Cost $" + (res[0].Price * answers.howManyUnits).toFixed(2));
+              console.log(res[0].Product_Name + " Quantity Remaining: " +
+                (res[0].Stock_Quantity - answers.howManyUnits) + "\n");
+              console.log("\n**************Stock Updated**************\r\n");
+              //updateStock();
+
               startShopping();
             }
 
@@ -84,3 +88,4 @@ function showProducts() {
       });
   }
 }
+
