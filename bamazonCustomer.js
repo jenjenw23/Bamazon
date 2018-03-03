@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "-------",
+  password: "------",
   database: "bamazon_DB"
 });
 
@@ -81,16 +81,8 @@ function showProducts() {
               console.log("************************\r\n");
               var newQuantity = res[0].Stock_Quantity - answers.howManyUnits;
               //update quantity
-              connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [
-                  {
-                    Stock_Quantity: newQuantity
-                  },
-                  {
-                    Item_ID: answers.whatID
-                  }
-                ],
+              connection.query("UPDATE products SET ? WHERE ?",
+                [{ Stock_Quantity: newQuantity }, { Item_ID: answers.whatID }],
                 function (err, response) {
                   if (err) throw err;
                   console.log("----Stock Updated----");
