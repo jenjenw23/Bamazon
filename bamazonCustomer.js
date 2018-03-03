@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "------",
+  password: "-----",
   database: "bamazon_DB"
 });
 
@@ -77,7 +77,7 @@ function showProducts() {
               console.log("You purchased: " + answers.howManyUnits + " " + res[0].Product_Name);
               console.log("Total Cost: $" + (res[0].Price * answers.howManyUnits).toFixed(2));
               console.log("\n************************");
-              console.log("Thank you for you order!");
+              console.log("Thank you for your order!");
               console.log("************************\r\n");
               var newQuantity = res[0].Stock_Quantity - answers.howManyUnits;
               //update quantity
