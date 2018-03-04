@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "-----",
+  password: "----",
   database: "bamazon_DB"
 });
 
@@ -65,14 +65,15 @@ function showProducts() {
     console.table(res);
     whatToDo();
   });
+}  
 
-  function startShopping() {
+  function addInventory() {
     inquirer
       .prompt([
         {
           name: "whatID",
           type: "input",
-          message: "What is the ID of the product you would like to buy? ",
+          message: "What is the ID of the product you would like add invetory to? ",
           validate: function (value) {
             if (isNaN(value) === false) {
               return true;
@@ -83,7 +84,7 @@ function showProducts() {
         {
           name: "howManyUnits",
           type: "input",
-          message: "How many units of the product would you like to buy? ",
+          message: "How many units of the product would you like to add? ",
           validate: function (value) {
             if (isNaN(value) === false) {
               return true;
@@ -98,47 +99,49 @@ function showProducts() {
           function (err, res) {
             //console.log(answers.howManyUnits);
             //console.log(res);
-            if (answers.howManyUnits > res[0].Stock_Quantity) {
-              console.log("\r\n*********************************");
-              console.log("Insufficient Quantity Available!");
-              console.log("Please try again.");
-              console.log("*********************************\r\n");
-              startShopping();
-            }
-            else {
-              console.log("\r\nOrder Summary:");
-              console.log("----------------");
-              console.log("You purchased: " + answers.howManyUnits + " " + res[0].Product_Name);
-              console.log("Total Cost: $" + (res[0].Price * answers.howManyUnits).toFixed(2));
-              console.log("\n************************");
-              console.log("Thank you for your order!");
-              console.log("************************\r\n");
-              var newQuantity = res[0].Stock_Quantity - answers.howManyUnits;
-              //update quantity
-              connection.query("UPDATE products SET ? WHERE ?",
-                [{ Stock_Quantity: newQuantity }, { Item_ID: answers.whatID }],
-                function (err, response) {
-                  if (err) throw err;
-                  console.log("----Stock Updated----");
-                  console.log("Quantity Remaining: " + newQuantity + "\n");
-                  inquirer.prompt([
-                    {
-                      type: "confirm",
-                      name: "keepShopping",
-                      message: "Do you want to continute shopping?"
-                    }])
-                    .then(function (response) {
-                      if (response.keepShopping) {
-                        showProducts();
-                      } else {
-                        console.log("\n*************************************");
-                        console.log("Sorry to see you go! Come back soon!")
-                        console.log("*************************************");
-                      }
-                    });
-                })
-            }
+            // if (answers.howManyUnits > res[0].Stock_Quantity) {
+            //   // console.log("\r\n*********************************");
+            //   // console.log("Insufficient Quantity Available!");
+            //   // console.log("Please try again.");
+            //   // console.log("*********************************\r\n");
+            //   // startShopping();
+            // }
+            // else {
+            //   console.log("\r\nOrder Summary:");
+            //   console.log("----------------");
+            //   console.log("You purchased: " + answers.howManyUnits + " " + res[0].Product_Name);
+            //   console.log("Total Cost: $" + (res[0].Price * answers.howManyUnits).toFixed(2));
+            //   console.log("\n************************");
+            //   console.log("Thank you for your order!");
+            //   console.log("************************\r\n");
+            var newQuantity = res[0].Stock_Quantity - answers.howManyUnits;
+            //update quantity
+            connection.query("UPDATE products SET ? WHERE ?",
+              [{ Stock_Quantity: newQuantity }, { Item_ID: answers.whatID }],
+              function (err, response) {
+                if (err) throw err;
+                console.log("----Stock Updated----");
+                console.log("Quantity Remaining: " + newQuantity + "\n");
+                showProducts();
+                whatToDo();
+                // inquirer.prompt([
+                //   {
+                //     type: "confirm",
+                //     name: "keepShopping",
+                //     message: "Do you want to continute shopping?"
+                //   }])
+                //   .then(function (response) {
+                //     if (response.keepShopping) {
+                //       whatToDo();
+                //     } else {
+                //       console.log("\n*************************************");
+                //       console.log("Sorry to see you go! Come back soon!")
+                //       console.log("*************************************");
+                //     }
+                //   });
+              })
+            //}
           });
       });
   }
-}
+
