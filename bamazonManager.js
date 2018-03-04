@@ -30,7 +30,8 @@ function whatToDo() {
         "View Products for Sale",
         "View Low Inventory",
         "Add to Inventory",
-        "Add New Product"
+        "Add New Product",
+        "Exit"
       ]
     })
     .then(function (answer) {
@@ -49,6 +50,10 @@ function whatToDo() {
 
         case "Add New Product":
           addNewProduct();
+          break;
+
+        case "Exit":
+          exitManager();
           break;
       }
     });
@@ -79,7 +84,7 @@ function showLowInventory() {
 }
 
 function addInventory() {
-  //clears choices
+  //clears choices to keep questions from repeating
   answers = [];
   inquirer.prompt([
     {
@@ -141,25 +146,27 @@ function addInventory() {
               console.log("\r\n----Stock Updated----");
               console.log("Quantity Remaining: " + newQuantity + "\n");
               showProducts();
-              //whatToDo();
-              // inquirer.prompt([
-              //   {
-              //     type: "confirm",
-              //     name: "keepShopping",
-              //     message: "Do you want to continute shopping?"
-              //   }])
-              //   .then(function (response) {
-              //     if (response.keepShopping) {
-              //       whatToDo();
-              //     } else {
-              //       console.log("\n*************************************");
-              //       console.log("Sorry to see you go! Come back soon!")
-              //       console.log("*************************************");
-              //     }
-              //   });
             })
-          //}
         });
     });
+
+  function exitManager() {
+    inquirer.prompt([
+      {
+        type: "confirm",
+        name: "wantToExit",
+        message: "Are you sure you want to exit?"
+      }])
+      .then(function (response) {
+        if (response.keepShopping) {
+          console.log("\n*******");
+          console.log("Goodbye!")
+          console.log("********");
+        } else {
+          whatToDo();
+        }
+      });
+
+  }
 }
 
