@@ -21,9 +21,10 @@ Bamazon is a CLI Amazon-like storefront with a MySQL backend. The app will takes
 ![alt text](https://github.com/jenjenw23/Bamazon/blob/master/screenshots/manager04-addinvetory.JPG)
 
 ## Manager - Add New Product
-![alt text](https://github.com/jenjenw23/Bamazon/blob/master/screenshots/manager05-exit-no.JPG)
+![alt text](url)
 
 ## Manager - Exit
+![alt text](https://github.com/jenjenw23/Bamazon/blob/master/screenshots/manager05-exit-no.JPG)
 ![alt text](https://github.com/jenjenw23/Bamazon/blob/master/screenshots/manager05-exit-yes.JPG)
 
 
