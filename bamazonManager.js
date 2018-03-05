@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "----",
+  password: "-------",
   database: "bamazon_DB"
 });
 
@@ -21,6 +21,7 @@ connection.connect(function (err) {
 });
 
 function whatToDo() {
+  console.log("\n") //add space for easier reading
   inquirer
     .prompt({
       name: "action",
@@ -81,6 +82,25 @@ function showLowInventory() {
     console.table(res);
     whatToDo();
   })
+}
+
+function exitManager() {
+  inquirer.prompt([
+    {
+      type: "confirm",
+      name: "wantToExit",
+      message: "Are you sure you want to exit?"
+    }])
+    .then(function (response) {
+      if (response.wantToExit) {
+        console.log("\n*******");
+        console.log("Goodbye!")
+        console.log("********");
+      } else {
+        whatToDo();
+      }
+    });
+
 }
 
 function addInventory() {
@@ -149,24 +169,5 @@ function addInventory() {
             })
         });
     });
-
-  function exitManager() {
-    inquirer.prompt([
-      {
-        type: "confirm",
-        name: "wantToExit",
-        message: "Are you sure you want to exit?"
-      }])
-      .then(function (response) {
-        if (response.keepShopping) {
-          console.log("\n*******");
-          console.log("Goodbye!")
-          console.log("********");
-        } else {
-          whatToDo();
-        }
-      });
-
-  }
 }
 
