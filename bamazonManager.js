@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "-------",
+  password: "-----",
   database: "bamazon_DB"
 });
 
@@ -100,12 +100,89 @@ function exitManager() {
         whatToDo();
       }
     });
+}
 
+function addNewProduct() {
+  //clears choices to keep questions from repeating
+  answers = [];
+  inquirer.prompt([
+    {
+      name: "newProductName",
+      type: "input",
+      message: "What is the Product Name?",
+      validate: function (value) {
+        if (value === '') {
+          console.log('\nPlease enter a valid department name.');
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+    {
+      name: "newProductDept",
+      type: "input",
+      message: "What is the Department Name of the new product?",
+      validate: function (value) {
+        if (value === '') {
+          console.log('\nPlease enter a valid department name.');
+          return false;
+        } else {
+          return true;
+        }
+      }
+    },
+    {
+      name: "newProductPrice",
+      type: "input",
+      message: "What is the Price of the new product?",
+      validate: function (value) {
+        if (isNaN(value) === false) {
+          return true;
+        }
+        return false;
+      }
+    },
+    {
+      name: "newProductUnits",
+      type: "input",
+      message: "How much Stock is there of the new product?",
+      validate: function (value) {
+        if (isNaN(value) === false) {
+          return true;
+        }
+        return false;
+      }
+    }
+  ])
+    .then(function (answers) {
+
+      //create vars and parse quantities 
+      var newProductName = answers.newProductName;
+      var newProductDept = answers.newProductDept;
+      var newProductPrice = parseFloat(answers.newProductPrice).toFixed(2);
+      var newProductUnits = parseInt(answers.newProductUnits);
+
+      //update quantity
+      connection.query("INSERT INTO products SET ?",
+        [{
+          Product_Name: newProductName,
+          Department_Name: newProductDept,
+          Price: newProductPrice,
+          Stock_Quantity: newProductUnits
+        }],
+        function (err, response) {
+          if (err) throw err;
+          console.log("\n-------------------------");
+          console.log("------New Item Added------");
+          console.log("--------------------------");
+          showProducts();
+        })
+    });
 }
 
 function addInventory() {
   //clears choices to keep questions from repeating
-  answers = [];
   inquirer.prompt([
     {
       name: "whatID",
@@ -134,26 +211,8 @@ function addInventory() {
       var query = 'SELECT Stock_Quantity, Price, Product_Name FROM products WHERE ?';
       connection.query(query, { Item_ID: answers.whatID },
         function (err, res) {
-          //console.log(answers.howManyUnits);
-          //console.log(res);
-          // if (answers.howManyUnits > res[0].Stock_Quantity) {
-          //   // console.log("\r\n*********************************");
-          //   // console.log("Insufficient Quantity Available!");
-          //   // console.log("Please try again.");
-          //   // console.log("*********************************\r\n");
-          //   // startShopping();
-          // }
-          // else {
-          //   console.log("\r\nOrder Summary:");
-          //   console.log("----------------");
-          //   console.log("You purchased: " + answers.howManyUnits + " " + res[0].Product_Name);
-          //   console.log("Total Cost: $" + (res[0].Price * answers.howManyUnits).toFixed(2));
-          //   console.log("\n************************");
-          //   console.log("Thank you for your order!");
-          //   console.log("************************\r\n");
-
           //create vars and parse quantities to do the math correctly 
-          var quantityStock = parseInt(res[0].Stock_Quantity, 10);
+          var quantityStock = parseInt(res[0].Stock_Quantity);
           var quantityToAdd = parseInt(answers.howManyUnits);
           var newQuantity = quantityStock + quantityToAdd;
           console.log(newQuantity);
